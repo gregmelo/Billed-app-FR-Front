@@ -21,71 +21,14 @@ const row = (bill) => {
 
 const rows = (data) => {
   console.log(data);
-
-  // Fonction pour convertir les mois français en chiffres
-  const convertFrenchDate = (dateStr) => {
-    const months = {
-      "Jan.": "01",
-      "Fév.": "02",
-      "Mar.": "03",
-      "Avr.": "04",
-      "Mai.": "05",
-      "Juin": "06",
-      "Juil.": "07",
-      "Aoû.": "08",
-      "Sep.": "09",
-      "Oct.": "10",
-      "Nov.": "11",
-      "Déc.": "12",
-    };
-
-    // Remplace le mois en français par un mois numérique
-    return dateStr.replace(
-      /(\d{1,2}) (\w{3,4}) (\d{2})/,
-      (match, day, month, year) => {
-        let monthNum = months[month];
-        if (!monthNum) {
-          // Vérification supplémentaire pour "Jui."
-          if (month === "Jui.") {
-            if (dateStr.includes("Juin")) {
-              monthNum = "06";
-            } else if (dateStr.includes("Juil.")) {
-              monthNum = "07";
-            }
-          }
-        }
-        if (monthNum) {
-          return `20${year}-${monthNum}-${day.padStart(2, "0")}`; // Format YYYY-MM-DD
-        }
-        return null; // Retourne null si le mois n'est pas trouvé
-      }
-    );
-  };
-
-  const sortingDates = (a, b) => {
-    const dateA = new Date(convertFrenchDate(a.date));
-    const dateB = new Date(convertFrenchDate(b.date));
-    console.log(dateA.getTime(), dateB.getTime());
-
-    if (isNaN(dateA) || isNaN(dateB)) {
-      console.error("Invalid date format", a.date, b.date);
-      return 0;
-    }
-
-    return dateB - dateA; // Pour trier de la plus récente à la plus vieille
-  };
-
   if (data && data.length) {
     return data
-      .sort(sortingDates)
       .map((bill) => row(bill))
       .join("");
   } else {
     return "";
   }
 };
-
-
 
 export default ({ data: bills, loading, error }) => {
   const modal = () => `
