@@ -147,23 +147,26 @@ export default class {
   handleShowTickets(e, bills, index) {
     this.counters = this.counters || {};
     if (!this.counters[index]) this.counters[index] = 0;
+    
+    // On vérifie si on doit afficher ou cacher la liste des factures
     if (this.counters[index] % 2 === 0) {
-      $(`#arrow-icon${index}`).css({ transform: 'rotate(0deg)'});
+      $(`#arrow-icon${index}`).css({ transform: 'rotate(0deg)' });
       $(`#status-bills-container${index}`)
         .html(cards(filteredBills(bills, getStatus(index))))
       this.counters[index]++;
+      
+      // On attache un événement de clic à chaque facture affichée pour permettre la modification
+      bills.forEach(bill => {
+        $(`#open-bill${bill.id}`).off('click'); // On désactive les anciens événements pour éviter les doublons
+        $(`#open-bill${bill.id}`).on('click', (e) => this.handleEditTicket(e, bill, bills));
+      });
+      
     } else {
-      $(`#arrow-icon${index}`).css({ transform: 'rotate(90deg)'});
-      $(`#status-bills-container${index}`)
-        .html("")
+      $(`#arrow-icon${index}`).css({ transform: 'rotate(90deg)' });
+      $(`#status-bills-container${index}`).html(""); // On cache les factures
       this.counters[index]++;
     }
   
-    // On attache un événement de clic à chaque facture pour permettre la modification
-    bills.forEach(bill => {
-      $(`#open-bill${bill.id}`).click((e) => this.handleEditTicket(e, bill, bills))
-    });
-    
     return bills;
   }
 
